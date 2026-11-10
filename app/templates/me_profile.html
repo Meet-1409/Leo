@@ -1,0 +1,164 @@
+{% extends "me_layout.html" %}{% block title %}Your profile{% endblock %}
+{% block content %}
+<p class="eye">Profile</p><h1>Your profile</h1>
+
+{% if flash %}<p class="soft mt" role="status">{{ flash }}</p>{% endif %}
+<section class="card mt" style="max-width:760px">
+  <h2 style="margin-bottom:12px">Photo</h2>
+  {% if user.photo_path %}<img src="/me/photo" alt="Your photo" style="width:96px;height:96px;border-radius:50%;object-fit:cover;margin-bottom:12px;display:block">{% endif %}
+  <input class="input" type="file" id="photo-file" accept="image/jpeg,image/png,image/webp" aria-label="Choose a photo">
+  <div class="row" style="margin-top:12px;align-items:center"><button class="btn" type="button" onclick="uploadPhoto()">Upload photo</button>{% if user.photo_path %}<button class="btn2" type="button" onclick="deletePhoto()">Remove photo</button>{% endif %}<span id="photo-msg" class="soft"></span></div>
+</section>
+<form method="post" style="max-width:760px" class="mt" id="profile-form">
+  <div class="cards">
+    <label class="field"><span>Name</span><input class="input" name="name" value="{{ user.name }}"></label>
+    <div class="field">
+      <span>Phone
+        {% if user.phone %}
+          <span class="tag" id="phone-status" style="margin-left:6px">Saved</span>
+        {% else %}
+          <span class="tag grey" id="phone-status" style="margin-left:6px">Not added</span>
+        {% endif %}
+      </span>
+      <div style="display:flex;gap:8px;align-items:center">
+        <input class="input" name="phone" id="phone-input" value="{{ user.phone }}" placeholder="+91 98765 43210" style="flex:1">
+        <button type="button" class="btn" id="verify-phone-btn" onclick="requestPhoneOtp()">Verify</button>
+      </div>
+    </div>
+  </div>
+  <label class="field"><span>Role you want</span><input class="input" name="target_role" value="{{ user.target_role }}"></label>
+  <label class="field"><span>About you</span><textarea class="input" name="about">{{ user.about }}</textarea></label>
+  <label class="field"><span>Skills</span><input class="input" name="skills" value="{{ user.skills }}"></label>
+  <label class="field"><span>Experience</span><textarea class="input" name="experience">{{ user.experience }}</textarea></label>
+  <label class="field"><span>Education</span><textarea class="input" name="education">{{ user.education }}</textarea></label>
+  <label class="field"><span>LinkedIn</span><input class="input" name="linkedin" value="{{ user.linkedin or '' }}" placeholder="https://linkedin.com/in/your-name"></label>
+  <label class="field"><span>GitHub</span><input class="input" name="github" value="{{ user.github or '' }}" placeholder="https://github.com/your-name"></label>
+  <label class="field"><span>Portfolio</span><input class="input" name="portfolio" value="{{ user.portfolio or '' }}" placeholder="https://your-site.com"></label>
+  <button class="btn">Save profile</button>
+</form>
+
+<section class="card mt" style="max-width:760px">
+  <h2 style="margin-bottom:12px">Resume</h2>
+  {% if resume %}
+  <div class="between" style="align-items:center;margin-bottom:12px">
+    <div>
+      <p><strong>{{ resume.filename }}</strong></p>
+      <p class="soft">Uploaded {{ resume.created_at.strftime("%d %b %Y") }}</p>
+    </div>
+    <div style="display:flex;gap:8px">
+      <a class="btn" href="/me/resume" download>Download</a>
+      <button class="btn" type="button" onclick="autofill(this)">Fill my profile from this</button>
+      <button class="btn" onclick="deleteResume(this)">Remove</button>
+    </div>
+  </div>
+  {% endif %}
+  <form id="resume-form" enctype="multipart/form-data">
+    <label class="field">
+      <span>Upload resume <span class="soft">(PDF or Word, max 10 MB)</span></span>
+      <input class="input" type="file" name="resume" accept=".pdf,.doc,.docx" required>
+    </label>
+    <button class="btn" type="button" onclick="uploadResume(this)">{{ "Replace resume" if resume else "Upload resume" }}</button>
+    <span id="resume-msg" class="soft" style="margin-left:12px"></span>
+  </form>
+</section>
+
+<section class="card mt" style="max-width:760px">
+  <h2 style="margin-bottom:12px">Password</h2>
+  {% with action_next="/me/profile" %}{% include "password_form.html" %}{% endwith %}
+</section>
+
+<!-- Phone verify modal -->
+<div id="phone-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;align-items:center;justify-content:center">
+  <div class="card" style="width:min(400px,90vw);padding:28px 32px">
+    <h2 style="margin-bottom:16px">Verify your number</h2>
+    <p class="soft" id="otp-sent-msg" style="margin-bottom:16px"></p>
+    <label class="field"><span>6-digit code</span><input class="input" id="otp-input" type="text" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="000000"></label>
+    <div style="display:flex;gap:8px;margin-top:16px">
+      <button class="btn" onclick="submitOtp()">Confirm</button>
+      <button class="btn" style="background:transparent;border:1.5px solid var(--ink);color:var(--ink)" onclick="closePhoneModal()">Cancel</button>
+    </div>
+    <p id="otp-error" class="soft" style="color:var(--red,#c0392b);margin-top:8px;display:none"></p>
+  </div>
+</div>
+
+<script>
+let _pendingPhone = "";
+function requestPhoneOtp() {
+  const phone = document.getElementById("phone-input").value.trim();
+  if (!phone) { alert("Enter a phone number first."); return; }
+  _pendingPhone = phone;
+  fetch("/me/phone/request", {method:"POST",body:new URLSearchParams({phone}),headers:{"Content-Type":"application/x-www-form-urlencoded"}})
+    .then(r=>r.json()).then(d=>{
+      if (d.error) { alert(d.error); return; }
+      const msg = d.demo ? "Demo mode: check the inbox at /inbox for the code." : "A 6-digit code was sent to your number.";
+      document.getElementById("otp-sent-msg").textContent = msg;
+      document.getElementById("phone-modal").style.display = "flex";
+      document.getElementById("otp-input").focus();
+    });
+}
+function closePhoneModal() {
+  document.getElementById("phone-modal").style.display = "none";
+  document.getElementById("otp-error").style.display = "none";
+  document.getElementById("otp-input").value = "";
+}
+function submitOtp() {
+  const code = document.getElementById("otp-input").value.trim();
+  fetch("/me/phone/verify", {method:"POST",body:new URLSearchParams({phone:_pendingPhone,code}),headers:{"Content-Type":"application/x-www-form-urlencoded"}})
+    .then(r=>r.json()).then(d=>{
+      if (d.error) {
+        document.getElementById("otp-error").textContent = d.error;
+        document.getElementById("otp-error").style.display = "";
+        return;
+      }
+      closePhoneModal();
+      document.getElementById("phone-status").textContent = "Verified";
+      document.getElementById("phone-status").className = "tag";
+    });
+}
+document.getElementById("otp-input").addEventListener("keydown", e=>{ if(e.key==="Enter"){e.preventDefault();submitOtp();}});
+
+async function uploadPhoto() {
+  const file = document.getElementById("photo-file").files[0];
+  const msg = document.getElementById("photo-msg");
+  if (!file) { msg.textContent = "Choose a photo first."; return; }
+  const r = await fetch("/me/photo", {method:"POST",body:file});
+  const d = await r.json();
+  if (d.error) { msg.textContent = d.error; return; }
+  location.reload();
+}
+async function deletePhoto() {
+  await fetch("/me/photo", {method:"DELETE"});
+  location.reload();
+}
+async function autofill(btn) {
+  const msg = document.getElementById("resume-msg");
+  btn.disabled = true;
+  msg.textContent = "Reading your resume…";
+  const r = await fetch("/me/resume/autofill", {method:"POST"});
+  const d = await r.json();
+  btn.disabled = false;
+  if (d.error) { msg.textContent = d.error; return; }
+  const form = document.getElementById("profile-form");
+  for (const [k, v] of Object.entries(d)) if (v && form.elements[k]) form.elements[k].value = v;
+  msg.textContent = "Your profile is filled in below. Check it, then select Save profile.";
+}
+async function uploadResume(btn) {
+  const form = document.getElementById("resume-form");
+  const data = new FormData(form);
+  btn.disabled = true;
+  document.getElementById("resume-msg").textContent = "Uploading…";
+  const r = await fetch("/me/resume", {method:"POST",body:data});
+  const d = await r.json();
+  btn.disabled = false;
+  if (d.error) { document.getElementById("resume-msg").textContent = d.error; return; }
+  document.getElementById("resume-msg").textContent = "Saved: " + d.filename;
+  setTimeout(()=>location.reload(), 1200);
+}
+async function deleteResume(btn) {
+  if (!confirm("Remove your resume?")) return;
+  btn.disabled = true;
+  await fetch("/me/resume", {method:"DELETE"});
+  location.reload();
+}
+</script>
+{% endblock %}

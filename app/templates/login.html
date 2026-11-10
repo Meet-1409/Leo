@@ -1,0 +1,34 @@
+{% extends "bare.html" %}{% block title %}Log in to Leo{% endblock %}{% block body %}
+<div class="lights-out" aria-hidden="true"></div>
+<div class="bulb-rig" id="bulb-rig"><div class="bulb-wire"></div><svg class="bulb" viewBox="0 0 54 78" aria-hidden="true"><path class="glass" d="M27 2C13 2 3 12 3 26c0 9 5 15 9 20 3 4 4 7 4 11h22c0-4 1-7 4-11 4-5 9-11 9-20C51 12 41 2 27 2Z" stroke="#12232E" stroke-width="2"/><path d="M20 57V40l-5-9m19 26V40l5-9M15 31c4 3 8 3 12 0 4 3 8 3 12 0" fill="none" stroke="#12232E" stroke-width="1.5"/><rect x="17" y="57" width="20" height="13" rx="2" fill="#12232E"/><path d="M21 70h12l-3 6h-6z" fill="#12232E"/></svg><div class="pull-cord" id="pull-cord"><button type="button" class="pull-knob" id="pull-knob" aria-label="Pull the cord"></button></div></div>
+<div class="win admin-win" id="admin-win" role="dialog" aria-label="Admin login" hidden><div class="win-bar" style="cursor:default"><span class="lights"><button type="button" class="light red" aria-label="Close admin login"></button><span class="light yellow" aria-hidden="true"></span><span class="light green" aria-hidden="true"></span></span><span class="win-title">Backstage</span></div><form id="admin-form" class="admin-body"><h2 class="h3" style="margin-bottom:16px">Admin login</h2><label class="field"><span>Admin email</span><input class="input" id="admin-email" name="email" type="email" required autocomplete="email"></label><label class="field" id="admin-code-field" hidden><span>Code from your email</span><input class="input" id="admin-code" name="code" inputmode="numeric" maxlength="6" autocomplete="one-time-code"></label><p class="soft" id="admin-message" role="status" style="font-size:15px;margin-bottom:12px"></p><button class="btn full" id="admin-button">Send code</button></form></div><div class="wrap">
+<header class="top"><a class="brand" href="/">LEO</a></header>
+<section style="display:flex;flex-wrap:wrap;gap:40px clamp(32px,6vw,88px);padding:clamp(32px,6vw,80px) 0">
+<div style="flex:1 1 380px"><p class="eye">Welcome</p><h1>Log in or create your account.</h1><p class="lead">Use a one-time code sent to your email, or your password if you have set one.</p>
+{% if demo %}<div class="card mt" style="max-width:520px"><h3 style="margin-bottom:8px">Sample accounts on this computer</h3><ul class="tick"><li><b>org@leo.test</b>: hiring team</li><li><b>candidate@leo.test</b>: candidate</li></ul></div>{% endif %}</div>
+<div style="flex:1 1 380px;max-width:480px" class="card">
+{% if error %}<p class="error" role="alert">{{ error }}</p>{% endif %}
+{% if step == "email" %}
+<form method="post" action="/login/code">
+<fieldset class="choice"><legend class="mono">I am here to</legend>
+<label><input type="radio" name="intent" value="hire" {% if intent == "hire" %}checked{% endif %}><span>Hire</span></label>
+<label><input type="radio" name="intent" value="interview" {% if intent == "interview" %}checked{% endif %}><span>Interview</span></label></fieldset>
+<input type="hidden" name="next" value="{{ next }}">
+<label class="field"><span>Email</span><input class="input" type="email" name="email" required autocomplete="email" placeholder="you@example.com" value="{{ email or '' }}"></label>
+<button class="btn full">Send me a code</button></form>
+<details style="margin-top:20px" {% if step_password %}open{% endif %}><summary class="soft" style="cursor:pointer">Log in with a password</summary>
+<form method="post" action="/login/password" style="margin-top:14px"><input type="hidden" name="next" value="{{ next }}">
+<label class="field"><span>Email</span><input class="input" type="email" name="email" required autocomplete="username" value="{{ email or '' }}"></label>
+<label class="field"><span>Password</span><input class="input" type="password" name="password" required autocomplete="current-password"></label>
+<button class="btn2 full">Log in</button></form><p class="soft" style="font-size:15px;margin-top:10px">Forgotten it, or never set one? Log in with a code, then set a password in your profile or organization settings.</p></details>
+{% else %}
+<form method="post" action="/login/verify">
+<input type="hidden" name="email" value="{{ email }}"><input type="hidden" name="intent" value="{{ intent }}"><input type="hidden" name="next" value="{{ next }}">
+{% if not shown_code %}<p class="soft" style="margin-bottom:18px">We sent a code to <b>{{ email }}</b>. Check your spam folder if it doesn't arrive.</p>{% endif %}
+{% if shown_code %}<p class="error" style="background:#F2EFE3;border-color:#D9D6CC;color:#12232E">Email isn't connected on this computer, so no email was sent. Your code is <b id="demo-code">{{ shown_code }}</b>.</p>{% endif %}
+<label class="field"><span>Code from your email</span><input class="input" name="code" inputmode="numeric" autocomplete="one-time-code" required maxlength="6" placeholder="6-digit code" value="{{ shown_code or '' }}"></label>
+<button class="btn full">Continue</button></form>
+<a class="btn2 full" style="margin-top:12px" href="/login?intent={{ intent }}">Use a different email</a>
+{% endif %}
+<p class="mono" style="margin:20px 0 0">By continuing you agree to our <a href="/privacy">terms and privacy policy</a>.</p>
+</div></section></div>{% endblock %}{% block scripts %}<script src="/static/bulb.js?v=2"></script>{% endblock %}

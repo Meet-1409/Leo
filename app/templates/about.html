@@ -1,0 +1,9 @@
+{% extends "bare.html" %}{% block title %}About{% endblock %}{% block body %}
+<div class="wrap">
+{% include "site_header.html" %}
+<section class="hero"><p class="eye">About</p><h1>Everyone deserves to be heard before they're judged.</h1><p class="lead">A resume shows where someone has been. A conversation shows what they can do. We make that conversation possible for every applicant.</p></section>
+<section class="sec"><h2 class="side-title">What we believe</h2><div class="body"><ul class="list"><li><h3>Same chance for everyone</h3><p class="soft">Every candidate for a role is scored on the same rules.</p></li><li><h3>Evidence you can check</h3><p class="soft">Every score links back to what was really said.</p></li><li><h3>People make the decision</h3><p class="soft">AI prepares the evidence. Your team makes the hiring call.</p></li></ul></div></section>
+<section class="sec"><h2 class="side-title">How we handle data</h2><div class="body"><p class="soft" style="max-width:34em">This demo sends voice and transcripts to OpenAI, outside India, so use test data only. Recordings are deleted after 30 days, and candidates are told what is recorded before they join.</p><p class="mt"><a href="/privacy" style="font-weight:500">Read our privacy policy</a></p></div></section>
+{% include "site_footer.html" %}
+</div>
+{% endblock %}

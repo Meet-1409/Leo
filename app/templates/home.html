@@ -1,0 +1,80 @@
+{% extends "bare.html" %}{% block title %}Leo home{% endblock %}{% block body %}
+<div style="background: #F8F6F0; color: #12232E; font-family: 'Instrument Sans', system-ui, sans-serif; font-size: 18px; line-height: 1.55">
+
+  <div style="max-width: 1240px; margin: 0 auto; padding: 0 clamp(20px, 4vw, 40px)">
+    {% include "site_header.html" %}
+
+    <section style="padding: clamp(64px, 9vw, 128px) 0 clamp(48px, 6vw, 80px)">
+      <p style="margin: 0 0 24px; display: flex; align-items: center; gap: 10px; font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #4A5A63"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: #0F5674"></span>Live AI interviews for hiring teams</p>
+      <h1 style="margin: 0; max-width: 11em; font-family: 'Instrument Serif', serif; font-weight: 400; font-size: clamp(60px, 8.6vw, 124px); line-height: 0.98; letter-spacing: -0.015em">Hear every candidate before you judge one.</h1>
+      <p style="margin: 30px 0 34px; max-width: 32em; font-size: 22px; color: #3F4F58">Leo holds a live voice interview with each applicant, written from your job description. You get the scores, the transcript and the evidence behind every one.</p>
+      <div style="display: flex; flex-wrap: wrap; gap: 12px">
+        <a href="/login?intent=hire" style="text-decoration: none; background: #12232E; color: #F8F6F0; padding: 16px 26px; border-radius: 999px; font-weight: 500">Start hiring</a>
+        <a href="/login?intent=interview" style="text-decoration: none; border: 1px solid #12232E; color: #12232E; padding: 15px 26px; border-radius: 999px; font-weight: 500">Practise an interview</a>
+      </div>
+    </section>
+
+    <section aria-label="What happens in an interview" style="padding-bottom:clamp(40px,5vw,64px)">
+      <div class="float-box" id="desk"><article class="win" data-win><div class="win-bar"><span class="lights"><button type="button" class="light red" aria-label="Close Interview question"></button><button type="button" class="light yellow" aria-label="Minimize Interview question"></button><button type="button" class="light green" aria-label="Expand Interview question"></button></span><span class="win-title">Interview question</span></div><p class="win-body">When would you choose a queue over a direct API call?</p></article><article class="win" data-win><div class="win-bar"><span class="lights"><button type="button" class="light red" aria-label="Close Live transcript"></button><button type="button" class="light yellow" aria-label="Minimize Live transcript"></button><button type="button" class="light green" aria-label="Expand Live transcript"></button></span><span class="win-title">Live transcript</span></div><p class="win-body">“When the work can finish later, like sending emails.”</p></article><article class="win" data-win><div class="win-bar"><span class="lights"><button type="button" class="light red" aria-label="Close Follow-up"></button><button type="button" class="light yellow" aria-label="Minimize Follow-up"></button><button type="button" class="light green" aria-label="Expand Follow-up"></button></span><span class="win-title">Follow-up</span></div><p class="win-body">And if that email job fails halfway?</p></article><article class="win" data-win><div class="win-bar"><span class="lights"><button type="button" class="light red" aria-label="Close Proctoring"></button><button type="button" class="light yellow" aria-label="Minimize Proctoring"></button><button type="button" class="light green" aria-label="Expand Proctoring"></button></span><span class="win-title">Proctoring</span></div><p class="win-body">One face in view. No phone in frame.</p></article><article class="win" data-win><div class="win-bar"><span class="lights"><button type="button" class="light red" aria-label="Close Answer score · 82/100"></button><button type="button" class="light yellow" aria-label="Minimize Answer score · 82/100"></button><button type="button" class="light green" aria-label="Expand Answer score · 82/100"></button></span><span class="win-title">Answer score · 82/100</span></div><p class="win-body">Clear reasoning, though it never mentions retries.</p></article><article class="win" data-win><div class="win-bar"><span class="lights"><button type="button" class="light red" aria-label="Close A strong answer"></button><button type="button" class="light yellow" aria-label="Minimize A strong answer"></button><button type="button" class="light green" aria-label="Expand A strong answer"></button></span><span class="win-title">A strong answer</span></div><p class="win-body">Retry with backoff, and make the job safe to run twice.</p></article><article class="win" data-win><div class="win-bar"><span class="lights"><button type="button" class="light red" aria-label="Close Experience level"></button><button type="button" class="light yellow" aria-label="Minimize Experience level"></button><button type="button" class="light green" aria-label="Expand Experience level"></button></span><span class="win-title">Experience level</span></div><p class="win-body">Questions pitched for two to four years of experience.</p></article><article class="win" data-win><div class="win-bar"><span class="lights"><button type="button" class="light red" aria-label="Close Report ready"></button><button type="button" class="light yellow" aria-label="Minimize Report ready"></button><button type="button" class="light green" aria-label="Expand Report ready"></button></span><span class="win-title">Report ready</span></div><p class="win-body">Transcript, recording and scores, ready for your team.</p></article><div class="dock" id="dock" aria-label="Minimized windows"><button type="button" class="btn2 slim" id="reopen" hidden>Bring the windows back</button></div></div>
+    </section>
+    {% include "partner_strip.html" %}
+
+    <section style="display: flex; flex-wrap: wrap; gap: 28px clamp(32px, 6vw, 88px); padding: clamp(48px, 6vw, 80px) 0; border-top: 1px solid #D9D6CC">
+      <h2 style="margin: 0; flex: 1 1 280px; font-family: 'Instrument Serif', serif; font-weight: 400; font-size: clamp(40px, 4.6vw, 60px); line-height: 1.02">How it works</h2>
+      <ol style="margin: 0; padding: 0; list-style: none; flex: 2 1 480px; min-width: 0">
+        
+          <li style="display: flex; gap: 20px; padding: 20px 0; border-bottom: 1px solid #D9D6CC">
+            <span style="flex: none; font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #4A5A63; padding-top: 5px">01</span>
+            <div><h3 style="margin: 0 0 2px; font-size: 21px; font-weight: 600">Post the job</h3><p style="margin: 0; color: #3F4F58">Add your description, skills and experience level.</p></div>
+          </li>
+        
+          <li style="display: flex; gap: 20px; padding: 20px 0; border-bottom: 1px solid #D9D6CC">
+            <span style="flex: none; font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #4A5A63; padding-top: 5px">02</span>
+            <div><h3 style="margin: 0 0 2px; font-size: 21px; font-weight: 600">Invite candidates</h3><p style="margin: 0; color: #3F4F58">Each person gets a private link by email.</p></div>
+          </li>
+        
+          <li style="display: flex; gap: 20px; padding: 20px 0; border-bottom: 1px solid #D9D6CC">
+            <span style="flex: none; font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #4A5A63; padding-top: 5px">03</span>
+            <div><h3 style="margin: 0 0 2px; font-size: 21px; font-weight: 600">Interview by call</h3><p style="margin: 0; color: #3F4F58">A live voice call whenever suits the candidate.</p></div>
+          </li>
+        
+          <li style="display: flex; gap: 20px; padding: 20px 0; border-bottom: 1px solid #D9D6CC">
+            <span style="flex: none; font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #4A5A63; padding-top: 5px">04</span>
+            <div><h3 style="margin: 0 0 2px; font-size: 21px; font-weight: 600">Read the report</h3><p style="margin: 0; color: #3F4F58">Scores, transcript, recording and every proctoring flag.</p></div>
+          </li>
+        
+          <li style="display: flex; gap: 20px; padding: 20px 0; border-bottom: 1px solid #D9D6CC">
+            <span style="flex: none; font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #4A5A63; padding-top: 5px">05</span>
+            <div><h3 style="margin: 0 0 2px; font-size: 21px; font-weight: 600">You decide</h3><p style="margin: 0; color: #3F4F58">People make the hiring call, with the evidence in front of them.</p></div>
+          </li>
+        
+      </ol>
+    </section>
+
+    <section style="display: flex; flex-wrap: wrap; gap: 28px clamp(32px, 6vw, 88px); padding: clamp(48px, 6vw, 80px) 0; border-top: 1px solid #D9D6CC">
+      <h2 style="margin: 0; flex: 1 1 280px; font-family: 'Instrument Serif', serif; font-weight: 400; font-size: clamp(40px, 4.6vw, 60px); line-height: 1.02">Built for both sides</h2>
+      <div style="flex: 2 1 480px; min-width: 0; display: flex; flex-wrap: wrap; gap: 16px">
+        <div style="flex: 1 1 280px; border: 1px solid #D9D6CC; border-radius: 14px; padding: 26px; background: #F2EFE3">
+          <p style="margin: 0 0 12px; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #4A5A63">Hiring teams</p>
+          <h3 style="margin: 0 0 10px; font-family: 'Instrument Serif', serif; font-weight: 400; font-size: 32px; line-height: 1.1">Compare people on the same rules</h3>
+          <p style="margin: 0 0 18px; color: #3F4F58">Questions at the right level, recordings, transcripts, team roles and credits in one place.</p>
+          <a href="/teams" style="font-weight: 500">For hiring teams</a>
+        </div>
+        <div style="flex: 1 1 280px; border: 1px solid #D9D6CC; border-radius: 14px; padding: 26px; background: #F2EFE3">
+          <p style="margin: 0 0 12px; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #4A5A63">Candidates</p>
+          <h3 style="margin: 0 0 10px; font-family: 'Instrument Serif', serif; font-weight: 400; font-size: 32px; line-height: 1.1">Practise before it counts</h3>
+          <p style="margin: 0 0 18px; color: #3F4F58">See your answer beside what a strong answer includes, earn certificates and browse open roles.</p>
+          <a href="/candidates" style="font-weight: 500">For candidates</a>
+        </div>
+      </div>
+    </section>
+
+    <section style="padding: clamp(64px, 8vw, 112px) 0; border-top: 1px solid #D9D6CC">
+      <h2 style="margin: 0 0 30px; max-width: 12em; font-family: 'Instrument Serif', serif; font-weight: 400; font-size: clamp(48px, 6.4vw, 88px); line-height: 1">Run your first interview this week.</h2>
+      <a href="/login" style="display: inline-block; text-decoration: none; background: #12232E; color: #F8F6F0; padding: 16px 26px; border-radius: 999px; font-weight: 500">Get started</a>
+    </section>
+
+    {% include "site_footer.html" %}
+  </div>
+</div>
+{% endblock %}{% block scripts %}<script src="/static/windows.js?v=5"></script>{% endblock %}

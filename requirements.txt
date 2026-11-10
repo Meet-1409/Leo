@@ -1,0 +1,13 @@
+boto3==1.42.97
+fastapi==0.128.8
+httpx==0.28.1
+Jinja2==3.1.6
+python-dotenv==1.2.1
+python-multipart==0.0.20
+SQLAlchemy==2.0.57
+uvicorn==0.39.0
+psycopg[binary]>=3.2,<4
+pdfplumber==0.11.8
+python-docx==1.2.0
+amazon-transcribe==0.6.4
+websockets==15.0.1

@@ -1,0 +1,4 @@
+{% extends "bare.html" %}{% block body %}<div class="app"><aside class="side"><a class="brand" href="/">LEO</a><a class="pick" href="/org/list" style="text-decoration:none">{{ org.name }}</a>
+<nav aria-label="Main">{% for key,label,url in [("home","Home","/org"),("jobs","Jobs","/org/jobs"),("candidates","Candidates","/org/candidates"),("reports","Reports","/org/reports"),("invitations","Invitations","/org/invitations"),("team","Team","/org/team"),("settings","Settings","/org/settings"),("billing","Credits","/org/billing"),("support","Support","/org/support")] %}<a {% if active==key %}class="on" aria-current="page"{% endif %} href="{{ url }}">{{ label }}</a>{% endfor %}</nav>
+<div class="sidefoot"><span class="mono">{{ org.credits }} credits</span><span class="mono">{{ user.email }}</span><form method="post" action="/logout"><button class="linkbtn">Log out</button></form></div></aside>
+<main class="main">{% block content %}{% endblock %}</main></div>{% endblock %}

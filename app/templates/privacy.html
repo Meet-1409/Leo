@@ -1,0 +1,13 @@
+{% extends "public.html" %}{% block title %}Leo privacy policy{% endblock %}{% block content %}<section class="hero" style="padding-bottom:24px"><p class="eye">Last updated {{ "6 November 2026" }}</p><h1>Privacy policy</h1><p class="lead">What Leo collects, why, and the choices you have.</p></section>
+{% for title, paragraphs in [
+("What we collect", ["Account details: your email, name, phone number, photo and profile, including any resume, skills, experience and education you add.", "Interview data: your voice, the transcript, scores, reports and proctoring events. For job interviews, also a recording of your camera and microphone.", "Usage data: the pages you open, device and browser details, and security logs."]),
+("How we use it", ["To run interviews, create reports for the employer who invited you, give you practice feedback, keep the service secure and answer support requests.", "We use automated scoring to help hiring teams. People at the employer make the hiring decision, and Leo doesn't decide for them."]),
+("Proctoring and recording", ["During an interview, face and object checks run in your browser. They flag events such as another person, a phone in view or leaving the tab. You are told about this, and asked to agree, before you join."]),
+("Where data is processed", ["Leo stores its data on Amazon Web Services in the Mumbai region of India."]),
+("Who can see it", ["For a job interview, the hiring organization that invited you can see your report, transcript, proctoring events and recording. Practice and certification reports are visible to you.", "We use service providers such as Amazon Web Services to run Leo. We don't sell your personal data."]),
+("How long we keep it", ["Interview recordings are deleted 30 days after the interview. Other data is kept while your account is active, or as long as the law requires."]),
+("Your rights", ["You can ask to see, correct or delete your personal data, or withdraw consent, by writing to us through the contact page. Withdrawing consent may mean you can't complete an interview."]),
+("Security", ["We encrypt data in transit and at rest, limit who can access it, and keep security logs."]),
+("Children", ["Leo isn't for anyone under 18."]),
+("Changes and contact", ["We'll update this page if this policy changes. Questions or complaints can be sent through our contact page."])
+] %}<section class="sec"><h2 class="side-title">{{ title }}</h2><div class="body stack">{% for p in paragraphs %}<p class="soft">{{ p }}</p>{% endfor %}</div></section>{% endfor %}<p class="mt"><a href="/contact">Contact us about privacy</a></p><div class="mt2"></div>{% endblock %}

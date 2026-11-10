@@ -1,0 +1,12 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}Leo{% endblock %}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="/static/leo.css?v=4">{% block head %}{% endblock %}
+</head><body>
+{% if demo %}<div class="demobar"><span>Running on this computer with sample data.</span><a href="/inbox">Test inbox</a></div>{% endif %}
+{% if flash %}<p class="flash" role="status">{{ flash }}</p>{% endif %}
+{% block body %}{% endblock %}
+{% block scripts %}{% endblock %}
+</body></html>

@@ -1,0 +1,45 @@
+.lobby{display:flex;flex-wrap:wrap;gap:32px clamp(32px,5vw,72px);padding:clamp(16px,3vw,40px) 0 56px}
+.lobby-preview{flex:1.3 1 460px;min-width:0;aspect-ratio:16/10;padding:0;overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center}
+.lobby-preview video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
+.lobby-panel{flex:1 1 360px;min-width:0}
+.checks li{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:13px 0}.check-text{flex:1}
+.check-dot{width:10px;height:10px;border-radius:50%;background:#BDB9AD;flex:none}.ok .check-dot{background:#2E7D5B}.bad .check-dot{background:#B3261E}.bad .check-text{color:#7E1C16}
+.meter{width:70px;height:6px;border-radius:3px;background:#E9E7E1;overflow:hidden}.meter span{display:block;height:100%;width:0;background:#0F5674}
+.consent{display:flex;gap:10px;align-items:flex-start;margin:20px 0;font-size:15px}.consent input{width:20px;height:20px;margin-top:3px;flex:none}
+.connecting{min-height:80vh;display:flex;flex-direction:column;gap:12px;align-items:center;justify-content:center;text-align:center}
+.ring{width:110px;height:110px;border-radius:50%;background:#BCDAE4;display:flex;align-items:center;justify-content:center;font:48px 'Instrument Serif',serif;animation:ring 1.6s ease-out infinite}
+@keyframes ring{0%{box-shadow:0 0 0 0 rgba(15,86,116,.35)}100%{box-shadow:0 0 0 26px rgba(15,86,116,0)}}
+.callpage{height:100vh;display:flex;flex-direction:column;gap:14px;padding:14px clamp(14px,2vw,24px) 20px;background:#F8F6F0}
+.call-bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px}
+.timer{font:34px/1 'Instrument Serif',serif}.timer.warning{color:#B3261E}
+#proctor-state.bad{background:#F3DFC4}
+.call-body{flex:1;display:flex;flex-wrap:wrap;gap:14px;min-height:0}
+.stage{flex:1.8 1 560px;min-width:0;min-height:0;display:flex;flex-direction:column;gap:14px}
+.tile{position:relative;overflow:hidden;padding:0}
+.tile-main{flex:1;min-height:280px;display:flex;align-items:center;justify-content:center}
+.agent-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 12%;transition:opacity .3s}
+#speaking-video{opacity:0}.speaking #speaking-video{opacity:1}
+.avatar{display:flex;flex-direction:column;align-items:center;gap:12px}.avatar-face{width:110px;height:110px;border-radius:50%;background:#F8F6F0;display:flex;align-items:center;justify-content:center;font:48px 'Instrument Serif',serif}
+.bars{display:flex;align-items:center;gap:4px;height:36px}.bars span{width:5px;height:5px;border-radius:3px;background:#12232E}
+.tile-label{position:absolute;left:12px;bottom:12px;z-index:2}
+.sound-button{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:3}
+.stage-row{display:flex;flex-wrap:wrap;gap:14px}
+.tile-self{flex:1 1 240px;height:170px}.tile-self video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}.tile-self.speaking{outline:2px solid #0F5674}
+.controls{flex:2 1 300px;display:flex;align-items:center;justify-content:center;gap:16px;padding:12px}
+.round{width:60px;height:60px;border-radius:50%;border:1px solid #12232E;background:transparent;color:#12232E;cursor:pointer}
+.round .mute-slash{display:none}.round[aria-pressed=true]{background:#12232E;color:#F8F6F0}.round[aria-pressed=true] .mute-slash{display:block}
+.hangup{width:84px;height:60px;border:0;border-radius:30px;background:#C8322B;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.transcript-panel{flex:1 1 320px;min-width:0;min-height:260px;max-height:100%;padding:0;display:flex;flex-direction:column;position:relative}
+.transcript-panel h2{font-size:28px;padding:14px 20px;border-bottom:1px solid #D9D6CC}
+.transcript{flex:1;min-height:0;overflow-y:auto;padding:18px 20px;display:flex;flex-direction:column;gap:16px}
+.turn-speaker{display:block;font:13px 'JetBrains Mono',monospace;color:#4A5A63}.turn.interviewer .turn-speaker{color:#0F5674}
+.jump{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);background:#F8F6F0}
+.toasts{position:fixed;top:70px;left:50%;transform:translateX(-50%);z-index:20;display:flex;flex-direction:column;gap:8px;width:min(440px,92vw)}
+.toast{padding:12px 16px;border-radius:14px;border:1px solid #A9C8D3;background:#F8F6F0;box-shadow:0 10px 24px rgba(18,35,46,.14);font-size:15px}.toast.warn{background:#F3DFC4;border-color:#E4C79E}.toast.danger{background:#B3261E;border-color:#B3261E;color:#fff}
+.spinner{width:28px;height:28px;margin-top:16px;border:3px solid #D9D6CC;border-top-color:#0F5674;border-radius:50%;animation:spin 1s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+dialog{border:1px solid #D9D6CC;border-radius:14px;padding:24px;background:#F8F6F0;color:#12232E;max-width:420px}dialog::backdrop{background:rgba(18,35,46,.45)}
+@media (max-width:900px){.callpage{height:auto;min-height:100vh}.transcript-panel{max-height:320px}}
+@media (prefers-reduced-motion:reduce){.ring,.spinner{animation:none}}
+
+/* A quiet, readable cue while the candidate waits for the next turn. */
+.interviewer-state{position:absolute;top:14px;left:14px;right:14px;z-index:2;width:fit-content;max-width:calc(100% - 28px);margin:0;padding:8px 12px;border-radius:10px;background:rgba(248,246,240,.94);color:#12232E;font-size:14px;line-height:1.4}

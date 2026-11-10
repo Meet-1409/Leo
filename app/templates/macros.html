@@ -1,0 +1,8 @@
+{% macro status_tag(i) -%}
+{%- if i.stage == "shortlisted" %}<span class="tag">Shortlisted</span>{% elif i.stage == "rejected" %}<span class="tag grey">Rejected</span>
+{%- elif i.status == "finished" %}<span class="tag">Finished</span>{% elif i.status == "processing" %}<span class="tag warn">Scoring</span>
+{%- elif i.status == "in_progress" %}<span class="tag warn">In progress</span>{% elif i.status == "invited" %}<span class="tag grey">Invited</span>
+{%- else %}<span class="tag grey">{{ i.status | capitalize }}</span>{% endif -%}
+{%- endmacro %}
+{% macro flags(i) -%}{% set n = i.proctoring | length %}{% if i.status in ("invited","in_progress") %}None yet{% elif n == 0 %}No flags{% else %}<span class="tag warn">{{ n }} warning{{ "s" if n != 1 }}</span>{% endif %}{%- endmacro %}
+{% macro score(i) -%}{% if i.overall_score is not none %}{{ i.overall_score | round | int }}{% else %}None yet{% endif %}{%- endmacro %}

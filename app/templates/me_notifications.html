@@ -1,0 +1,16 @@
+{% extends "me_layout.html" %}{% block title %}Notifications{% endblock %}
+{% block content %}
+<p class="eye">Your account</p><h1>Notifications</h1>
+{% if rows %}
+<ul class="list mt">
+{% for n in rows %}
+<li class="{{ '' if n.read else 'notif-unread' }}">
+  {% if n.link %}<a href="{{ n.link }}">{{ n.text }}</a>{% else %}<span>{{ n.text }}</span>{% endif %}
+  <span class="soft" style="float:right;font-size:12px">{{ n.created_at.strftime("%d %b %H:%M") }}</span>
+</li>
+{% endfor %}
+</ul>
+{% else %}
+<p class="soft mt">You have no notifications.</p>
+{% endif %}
+{% endblock %}

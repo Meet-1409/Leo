@@ -1,0 +1,14 @@
+{% extends "public.html" %}{% block title %}Leo terms and conditions{% endblock %}{% block content %}<section class="hero" style="padding-bottom:24px"><p class="eye">Last updated {{ "6 November 2026" }}</p><h1>Terms and conditions</h1><p class="lead">The rules for using Leo. By using the service, you agree to them.</p></section>
+{% for title, paragraphs in [
+("Your account", ["You must be at least 18, give accurate details and keep access to your email secure. You're responsible for what happens under your account."]),
+("Hiring teams", ["You must have a lawful reason to interview the people you invite, and must follow employment and data protection law. Scores support your team's judgement and shouldn't be the only basis for a hiring decision."]),
+("Candidates", ["Interviews must be your own work. You agree not to use outside help, other people or other devices during a proctored interview. An interview can end after repeated violations or abusive language."]),
+("Credits", ["Interviews use credits for each interview minute. Credits for an unused invitation are returned when it's cancelled or expires. Credits have no cash value."]),
+("Acceptable use", ["Don't break the law, attack or overload the service, copy it, get around its limits, or upload harmful content or other people's data without permission."]),
+("Your content", ["You keep ownership of what you upload. You let us use it only to run and secure Leo."]),
+("Our service", ["We own Leo and its software. AI output can be wrong, so check anything important. We may change or suspend features, and will try to give notice of major changes."]),
+("Limits of liability", ["Leo is provided as it is. To the extent the law allows, we aren't responsible for indirect losses or for hiring decisions made using the service."]),
+("Ending your use", ["You can stop using Leo at any time. We can suspend accounts that break these terms."]),
+("Governing law", ["These terms are governed by the laws of India."]),
+("Contact", ["Questions about these terms can be sent through our contact page."])
+] %}<section class="sec"><h2 class="side-title">{{ title }}</h2><div class="body stack">{% for p in paragraphs %}<p class="soft">{{ p }}</p>{% endfor %}</div></section>{% endfor %}<div class="mt2"></div>{% endblock %}

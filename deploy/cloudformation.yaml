@@ -1,0 +1,104 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Leo on one small server in AWS Mumbai, with private backups to S3.
+Parameters:
+  AlertEmail:
+    Type: String
+  InstanceType:
+    Type: String
+    Default: t4g.small
+  Arm64Ami:
+    Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
+    Default: /aws/service/canonical/ubuntu/server/24.04/stable/current/arm64/hvm/ebs-gp3/ami-id
+Rules:
+  MumbaiOnly:
+    Assertions:
+      - Assert: !Equals [!Ref "AWS::Region", ap-south-1]
+        AssertDescription: Leo must be deployed in ap-south-1 (Mumbai).
+Resources:
+  MonthlyBudget:
+    Type: AWS::Budgets::Budget
+    Properties:
+      Budget:
+        BudgetType: COST
+        TimeUnit: MONTHLY
+        BudgetLimit: {Amount: 30, Unit: USD}
+      NotificationsWithSubscribers:
+        - Notification: {NotificationType: ACTUAL, ComparisonOperator: GREATER_THAN, Threshold: 80}
+          Subscribers: [{SubscriptionType: EMAIL, Address: !Ref AlertEmail}]
+        - Notification: {NotificationType: FORECASTED, ComparisonOperator: GREATER_THAN, Threshold: 100}
+          Subscribers: [{SubscriptionType: EMAIL, Address: !Ref AlertEmail}]
+  Bucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    Properties:
+      PublicAccessBlockConfiguration: {BlockPublicAcls: true, BlockPublicPolicy: true, IgnorePublicAcls: true, RestrictPublicBuckets: true}
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault: {SSEAlgorithm: AES256}
+      LifecycleConfiguration:
+        Rules:
+          - {Id: ExpireBackups, Status: Enabled, Prefix: backups/, ExpirationInDays: 14}
+  Role:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - {Effect: Allow, Principal: {Service: ec2.amazonaws.com}, Action: sts:AssumeRole}
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+      Policies:
+        - PolicyName: leo
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action: [s3:GetObject, s3:PutObject]
+                Resource: !Sub "${Bucket.Arn}/*"
+              - Effect: Allow
+                Action: [ssm:GetParameter]
+                Resource: !Sub "arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/leo/*"
+              - Effect: Allow
+                Action: [transcribe:StartStreamTranscription, polly:SynthesizeSpeech, bedrock:InvokeModel, bedrock:InvokeModelWithResponseStream]
+                Resource: "*"
+                Condition:
+                  StringEquals: {aws:RequestedRegion: ap-south-1}
+              - Effect: Allow
+                Action: [ses:SendEmail]
+                Resource: "*"
+                Condition:
+                  StringEquals: {aws:RequestedRegion: ap-south-1}
+  Profile:
+    Type: AWS::IAM::InstanceProfile
+    Properties: {Roles: [!Ref Role]}
+  Firewall:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Leo website only. No SSH, because Session Manager is used.
+      SecurityGroupIngress:
+        - {IpProtocol: tcp, FromPort: 80, ToPort: 80, CidrIp: 0.0.0.0/0}
+        - {IpProtocol: tcp, FromPort: 443, ToPort: 443, CidrIp: 0.0.0.0/0}
+  Server:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !Ref Arm64Ami
+      InstanceType: !Ref InstanceType
+      IamInstanceProfile: !Ref Profile
+      SecurityGroupIds: [!GetAtt Firewall.GroupId]
+      MetadataOptions: {HttpTokens: required, HttpEndpoint: enabled}
+      BlockDeviceMappings:
+        - DeviceName: /dev/sda1
+          Ebs: {VolumeSize: 20, VolumeType: gp3, Encrypted: true}
+      Tags:
+        - {Key: Name, Value: leo}
+  Address:
+    Type: AWS::EC2::EIP
+    Properties:
+      InstanceId: !Ref Server
+Outputs:
+  InstanceId:
+    Value: !Ref Server
+  PublicIp:
+    Value: !Ref Address
+  BucketName:
+    Value: !Ref Bucket
