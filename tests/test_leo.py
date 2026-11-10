@@ -515,3 +515,18 @@ def test_logged_in_people_do_not_see_log_in_on_public_pages(web):
     page_text = web.get("/jobs").text
     assert 'href="/login">Log in' not in page_text and "My account" in page_text
     web.cookies.clear()
+
+
+def test_old_credit_and_certification_urls_redirect(web):
+    for old, new in {"/org/credits": "/org/billing", "/me/credits": "/me/wallet", "/me/certifications": "/me/certs"}.items():
+        reply = web.get(old, follow_redirects=False)
+        assert reply.status_code == 301 and reply.headers["location"] == new
+
+
+def test_report_rows_open_the_report(web):
+    login(web, "org@leo.test")
+    page_text = web.get("/org/reports").text
+    title = page_text.split("<title>")[1].split("</title>")[0]
+    assert "<script" not in title
+    assert 'class="row-link"' in page_text or "Reports appear here" in page_text
+    web.cookies.clear()

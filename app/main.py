@@ -487,6 +487,10 @@ for _path, _template in {"/": "home.html", "/how-it-works": "how.html", "/teams"
 
 
 # Redirect aliases so URLs from outside always resolve
+for _old, _new in {"/org/credits": "/org/billing", "/me/credits": "/me/wallet", "/me/certifications": "/me/certs"}.items():
+    app.add_api_route(_old, (lambda target: lambda: RedirectResponse(target, status_code=301))(_new), methods=["GET"], include_in_schema=False)
+
+
 @app.get("/register")
 def alias_register():
     return RedirectResponse("/login?intent=hire", status_code=301)
