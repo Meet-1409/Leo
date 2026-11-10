@@ -141,3 +141,7 @@ form.inline{display:inline}
 .notif-unread{background:#EDF5FB;border-radius:6px}
 
 .row-link{cursor:pointer}.row-link:hover td{background:#F2EFE3}
+.strip{-webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)}
+input[type=file].input{padding:8px;cursor:pointer}
+input[type=file].input::file-selector-button{margin-right:14px;padding:9px 18px;border:1px solid #12232E;border-radius:999px;background:transparent;color:#12232E;font:inherit;font-weight:500;cursor:pointer}
+input[type=file].input::file-selector-button:hover{background:#12232E;color:#F8F6F0}

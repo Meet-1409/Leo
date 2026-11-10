@@ -192,6 +192,7 @@ def page(request: Request, name: str, context: Optional[dict] = None, status: in
     context.setdefault("demo", demo_mode())
     context.setdefault("now_year", now().year)
     context.setdefault("flash", request.query_params.get("msg", ""))
+    context.setdefault("in_india", iv.voice_route() == "mumbai")
     if "user" not in context:
         with SessionLocal() as db:
             context["user"] = current_user(request, db)
@@ -934,7 +935,7 @@ def org_candidates(request: Request, q: str = "", job: str = "", stage: str = ""
 
 
 @app.get("/org/candidates/export")
-def org_candidates_export(request: Request, job: str = "", stage: str = ""):
+def org_candidates_export(request: Request, q: str = "", job: str = "", stage: str = ""):
     with SessionLocal() as db:
         user, member, org = org_context(request, db)
         query = db.query(Interview).filter(Interview.org_id == org.id, Interview.kind == "job",
@@ -946,6 +947,9 @@ def org_candidates_export(request: Request, job: str = "", stage: str = ""):
                 query = query.filter(Interview.stage == stage)
             else:
                 query = query.filter(Interview.status == stage)
+        if q.strip():
+            like = f"%{q.strip()[:80]}%"
+            query = query.filter(or_(Interview.candidate_name.ilike(like), Interview.candidate_email.ilike(like)))
         rows = query.order_by(Interview.id.desc()).limit(5000).all()
         output = io.StringIO()
         writer = csv.writer(output)
@@ -1475,9 +1479,11 @@ def me_home(request: Request):
         applied = db.query(Application).filter_by(user_id=user.id).order_by(Application.id.desc()).limit(20).all()
         resume = db.query(Resume).filter_by(user_id=user.id).first()
         fields = [user.name, user.target_role, user.about, user.skills, user.experience, user.education, user.phone, resume]
+        labels = ["name", "role you want", "about you", "skills", "experience", "education", "phone", "resume"]
         return cand_page(request, "me_home.html", user, "home", {
             "invites": invites, "recent": recent, "applied": applied, "links": {i.id: token_for(i) for i in invites},
             "completeness": round(100 * sum(bool(f) for f in fields) / len(fields)),
+            "missing": [label for label, value in zip(labels, fields) if not value],
             "badges": db.query(Badge).filter_by(user_id=user.id).count(),
             "unread_count": db.query(Notification).filter_by(user_id=user.id, read=False).count()})
 
@@ -1529,7 +1535,7 @@ def me_practice_start(request: Request, title: str = Form(""), skills: str = For
     with SessionLocal() as db:
         user = require_user(request, db)
         if not title.strip():
-            raise Go("/me/practice?msg=Enter a role to practise for.")
+            raise Go("/me/practice?msg=Enter a role to practice for.")
         token = start_self_interview(db, user, "practice", title.strip()[:160], skills.strip()[:500], description.strip()[:6000] or f"Practice interview for {title.strip()[:160]}.",
                                      form_minutes(minutes), difficulty if difficulty in ("Beginner", "Intermediate", "Advanced") else "Intermediate", language if language in ("English", "Hindi") else "English")
     raise Go(f"/i/{token}")

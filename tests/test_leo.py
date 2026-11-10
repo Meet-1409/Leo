@@ -530,3 +530,23 @@ def test_report_rows_open_the_report(web):
     assert "<script" not in title
     assert 'class="row-link"' in page_text or "Reports appear here" in page_text
     web.cookies.clear()
+
+
+def test_audit_fixes(web, monkeypatch):
+    web.cookies.clear()
+    assert "Practis" not in web.get("/").text and "practis" not in web.get("/candidates").text
+    assert "use test data only" in web.get("/about").text
+    monkeypatch.setenv("VOICE_ROUTE", "mumbai")
+    about = web.get("/about").text
+    assert "AWS Mumbai" in about and "OpenAI" not in about
+    monkeypatch.setenv("VOICE_ROUTE", "openai")
+    login(web, "org@leo.test")
+    assert "Viewers can only read" in web.get("/org/team").text
+    everyone = web.get("/org/candidates/export").text
+    nobody = web.get("/org/candidates/export?q=zzz-no-such-person").text
+    assert len(everyone.splitlines()) > 1 and len(nobody.splitlines()) == 1
+    web.cookies.clear()
+    login(web, "audit-new@leo.test", "interview")
+    home = web.get("/me").text
+    assert "Still to add" in home and "resume" in home and "Start practicing" in home
+    web.cookies.clear()
